@@ -34,6 +34,8 @@ class Track:
         self.artist = artist
     def __eq__(self, other): 
         return self.__dict__ == other.__dict__
+    def __hash__(self):
+        return hash((self.name,self.artist))
 
 def simplify(playList):
     "Convert the data taken from Spotify to Track object"
@@ -50,36 +52,26 @@ def simplify(playList):
 
 
 def sameTracks(pl1,pl2):
-    sameTrackpl = []
-    for i in range(len(pl2)):
-        if pl2[i] in pl1:
-            sameTrackpl.append(pl2[i])
+    sameTrackpl = list(set(pl1).intersection(pl2))
     return sameTrackpl
 
 def allTracks(pl1,pl2):
     allTrackpl = []
-    difTrackpl = []
     sameTrackpl = sameTracks(pl1,pl2)
-    for i in range(len(pl2)):
-        if pl2[i] not in pl1:
-            difTrackpl.append(pl2[i])
-    for i in range(len(pl1)):
-        if pl1[i] not in pl2:
-            difTrackpl.append(pl1[i])
-    allTrackpl = difTrackpl + sameTrackpl
+    allTrackpl = list(set(pl1) - set(sameTrackpl)) +pl2
     return allTrackpl
 
             
 #Get the playlists and return
 
-user = input('Playlist 1: Input user id :')
-playlist = input('Playlist 1: Input playlist id:')
+user = 'chrischinching'
+playlist = '0hHfwU4V0b3SXgMhCFnIqU'
 
 
 playList1 = simplify(getPlayList(user, playlist,token))
 
-user = input('Playlist 2: Input user id:')
-playlist = input('Playlist 2: Input playlist id:')
+user = 'leecro13'
+playlist = '4d2JJUEMf4H5xNOSIhRhEX'
 playList2= simplify(getPlayList(user, playlist,token))
 
 print('######################################')
